@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import dns from "node:dns";
+
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 type ConnectionObject = {
     isConnected?: number
@@ -13,14 +16,21 @@ async function dbConnect(): Promise<void> {
     }
 
     try {
-        const db = await mongoose.connect(process.env.MONGO_URI || '');
+        const uri = process.env.MONGO_URI;
+
+        if (!uri) {
+            throw new Error("MONGO_URI is missing from environment variables");
+        }
+
+        const db = await mongoose.connect(uri);
 
         connection.isConnected = db.connections[0].readyState
 
         console.log("DB CONNECTED SUCCESSFULLY");
     } catch (error) {
         console.log("DB Connection Failed", error);
-        process.exit(1);
+        // process.exit(1);
+        throw error;
     }
 }
 

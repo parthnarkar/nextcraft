@@ -11,7 +11,7 @@ export async function sendVerificationEmail(
         await resend.emails.send({
             from: 'Acme <onboarding@resend.dev>',
             to: email,
-            subject: 'Nextcraft | Verification Code',
+            subject: 'WhisperBox | Verification Code',
             react: VerificationEmail({ username: username, otp: verifyCode }),
         });
 
